@@ -1371,7 +1371,7 @@ function SkinFlash({ color, visible }: { color: string; visible: boolean }) {
 }
 
 function App() {
-  const [currentSkin, setCurrentSkin] = useState<Skin>(SKINS[0])
+  const [currentSkin, setCurrentSkin] = useState<Skin>(SKINS[1])
   const [username, setUsername] = useState('xX_YourName_Xx')
   const [selectedMood, setSelectedMood] = useState('chillin')
   const [currentTrackTitle, setCurrentTrackTitle] = useState(TRACKS[4].title)
