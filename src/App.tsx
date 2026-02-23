@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, CSSProperties } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef, CSSProperties } from 'react'
 import './App.css'
 
 // ============================================================
@@ -255,7 +255,7 @@ const DEFAULT_POSTS: Post[] = [
     id: '3',
     author: 'LiL_ShAwTy_07',
     avatar: '💎',
-    content: 'This song is my JAM!! Crank that Soulja Boy!! 🎵🔥 YOUUUUU',
+    content: 'This song is my JAM!! Crank that Soulja Boy!! 🎵🔥 YOUUUUU superman dat oh!! 🕺',
     timestamp: 'Jan 14, 2007 11:55 PM',
     mood: 'partyin',
   },
@@ -263,7 +263,7 @@ const DEFAULT_POSTS: Post[] = [
     id: '4',
     author: 'sk8rboi_2007',
     avatar: '🛹',
-    content: 'just got back from hot topic, copped the sickest band tee 🤘 if u dont like it ur not scene enough',
+    content: 'just got back from hot topic, copped the sickest band tee 🤘 also pre-ordered Halo 3... FINISH THE FIGHT!!',
     timestamp: 'Jan 14, 2007 8:30 PM',
     mood: 'on fire',
   },
@@ -271,7 +271,7 @@ const DEFAULT_POSTS: Post[] = [
     id: '5',
     author: '*.+BaByGiRl+.*',
     avatar: '🦋',
-    content: 'tYpInG lIkE tHiS bEcAuSe ItS 2007 aNd We CaN 🤪💕',
+    content: 'tYpInG lIkE tHiS bEcAuSe ItS 2007 aNd We CaN 🤪💕 also just saw Transformers... AUTOBOTS ROLL OUT!!',
     timestamp: 'Jan 14, 2007 6:12 PM',
     mood: 'magical',
   },
@@ -279,7 +279,7 @@ const DEFAULT_POSTS: Post[] = [
     id: '6',
     author: 'PIMP_DADDY',
     avatar: '🎩',
-    content: 'yo who got the new T-Pain album?? Buy U a Drank is FIRE 🔥🔥🔥',
+    content: 'yo who got the new T-Pain album?? Buy U a Drank is FIRE 🔥🔥🔥 also that new iPhone thing looks crazy... $499 tho?? 📱',
     timestamp: 'Jan 14, 2007 4:45 PM',
     mood: 'ballin',
   },
@@ -287,21 +287,104 @@ const DEFAULT_POSTS: Post[] = [
     id: '7',
     author: 'XxEmoKidxX',
     avatar: '💔',
-    content: 'nobody understands me... listening to MCR on repeat... *sigh* 🖤',
+    content: 'nobody understands me... listening to MCR on repeat... just finished reading Harry Potter 7 and IM NOT OK (I PROMISE) 🖤📖',
     timestamp: 'Jan 13, 2007 11:11 PM',
     mood: 'emo',
+  },
+  {
+    id: '8',
+    author: 'GuitarHero_Master',
+    avatar: '🎸',
+    content: 'I just FC\'d Through the Fire and Flames on Expert!! NOBODY can beat my score 🔥🎸 Guitar Hero III is the GOAT',
+    timestamp: 'Jan 13, 2007 9:20 PM',
+    mood: 'on fire',
+  },
+  {
+    id: '9',
+    author: '~WiLdCaT~HSM',
+    avatar: '🏀',
+    content: 'WHAT TIME IS IT?? SUMMERTIME!! 🌴☀️ High School Musical 2 was literally the best thing ever omggg',
+    timestamp: 'Jan 13, 2007 7:15 PM',
+    mood: 'partyin',
+  },
+  {
+    id: '10',
+    author: 'McLovinIT',
+    avatar: '🪪',
+    content: 'just saw Superbad... McLovin is literally me LMFAOOO 😂😂 "chicka chicka yeah"',
+    timestamp: 'Jan 12, 2007 10:30 PM',
+    mood: 'crazy',
   },
 ]
 
 const TOP_8_FRIENDS = [
-  { name: 'Tom', avatar: '👤', status: 'MySpace CEO lol' },
-  { name: 'xX_DarkAngel_Xx', avatar: '🖤', status: 'rawr xD' },
-  { name: '~*PrInCeSs*~', avatar: '👑', status: 'PC4PC??' },
-  { name: 'sk8rboi_2007', avatar: '🛹', status: 'scene 4 life' },
-  { name: 'LiL_ShAwTy_07', avatar: '💎', status: 'ballin' },
-  { name: '*.+BaByGiRl+.*', avatar: '🦋', status: 'add me <3' },
-  { name: 'XxEmoKidxX', avatar: '💔', status: 'broken...' },
-  { name: 'PIMP_DADDY', avatar: '🎩', status: 'gettin money' },
+  { name: 'Tom', avatar: '👤', status: 'MySpace CEO lol', img: 'https://i.imgur.com/Jvh1OQm.jpg' },
+  { name: 'xX_DarkAngel_Xx', avatar: '🖤', status: 'rawr xD', img: '' },
+  { name: '~*PrInCeSs*~', avatar: '👑', status: 'PC4PC??', img: '' },
+  { name: 'sk8rboi_2007', avatar: '🛹', status: 'scene 4 life', img: '' },
+  { name: 'LiL_ShAwTy_07', avatar: '💎', status: 'ballin', img: '' },
+  { name: '*.+BaByGiRl+.*', avatar: '🦋', status: 'add me <3', img: '' },
+  { name: 'XxEmoKidxX', avatar: '💔', status: 'broken...', img: '' },
+  { name: 'PIMP_DADDY', avatar: '🎩', status: 'gettin money', img: '' },
+]
+
+// 2007 Celebrity/Meme images - iconic moments from the era
+const CELEB_IMAGES_2007 = [
+  { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Soulja_Boy_in_2007.jpg/440px-Soulja_Boy_in_2007.jpg', caption: 'Soulja Boy - YOUUUUU', alt: 'Soulja Boy 2007' },
+  { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Kanye_West_at_the_2007_MTV_Video_Music_Awards.jpg/440px-Kanye_West_at_the_2007_MTV_Video_Music_Awards.jpg', caption: 'Kanye - Stronger era', alt: 'Kanye West 2007' },
+  { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Rihanna_concerts_2007.jpg/440px-Rihanna_concerts_2007.jpg', caption: 'Rihanna - Umbrella era', alt: 'Rihanna 2007' },
+  { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Avril_Lavigne_on_piano%2C_MotorFM_Party%2C_Berlin_%28edit%29.jpg/440px-Avril_Lavigne_on_piano%2C_MotorFM_Party%2C_Berlin_%28edit%29.jpg', caption: 'Avril - Hey Hey You You', alt: 'Avril Lavigne' },
+  { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/T-Pain_2007.jpg/440px-T-Pain_2007.jpg', caption: 'T-Pain - Buy U a Drank', alt: 'T-Pain 2007' },
+  { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Fergie_2007.jpg/440px-Fergie_2007.jpg', caption: 'Fergie - Glamorous', alt: 'Fergie 2007' },
+]
+
+// 2007 cultural quotes and references
+const QUOTES_2007 = [
+  'CRANK THAT SOULJA BOY!! YOUUUUU!!',
+  'Under my umbrella, ella, ella, eh eh eh',
+  'I got a feelin... that tonights gonna be a good night',
+  'Hey there Delilah, whats it like in New York City?',
+  'This is why Im hot... this is why this is why this is why Im hot',
+  'Party like a rockstar!! *air guitar*',
+  'She wolf in the closet... let me out let me out',
+  'Beautiful girls... all over the world',
+  'Im a flirt... soon as I see her walk up to her',
+  'N-n-n-now that that dont kill me, can only make me STRONGER',
+  'Buy U a Drank (shawty snappin) 🍹',
+  'Nobody nobody but u... its cupids chokehold',
+]
+
+const AWAY_MESSAGES_2007 = [
+  '~*~bRb GoNnA gO cRy In A cOrNeR~*~',
+  'iF u CaNt HaNdLe Me At My WoRsT... u DoNt DeSeRvE mE aT mY bEsT 💅',
+  '>>currently dying of boredom... txt me!! <<',
+  '♫ listening 2 my Chemical Romance on repeat ♫',
+  'shopping at hot topic brb!! 🖤⛓️',
+  'on da phone w/ my boo thang 📱💕',
+  'DoNt MeSs WiTh Me Im NoT iN tHe MoOd 😤',
+  'pc4pc?? c4c?? add me!! 💖',
+  '*~*~im not emo i just like black~*~*',
+  'aWaY - LeAvE a MeSsAgE aFtEr ThE bEeP 📟',
+]
+
+const SLANG_2007 = [
+  'thats so fetch!!', 'rawr xD', 'LMFAOOO', 'w/e', 'ttyl <3',
+  'bffl!!', 'omggg', 'ur so random!!', 'scene kids unite!!', 'sk8 or die',
+  'brb afk', 'roflcopter', 'l33t', 'pwnage', 'epic fail',
+  'FTW!!', 'kthxbai', 'O RLY?', 'DO NOT WANT', 'EPIC WIN',
+]
+
+const POP_CULTURE_2007 = [
+  { item: 'iPhone', detail: 'OMG Steve Jobs just dropped it!! $499??' },
+  { item: 'Transformers', detail: 'AUTOBOTS ROLL OUT!! best movie ever!!' },
+  { item: 'Harry Potter 7', detail: 'SNAPE KILLS... nvm NO SPOILERS!!' },
+  { item: 'Halo 3', detail: 'FINISH THE FIGHT!! who wants to play??' },
+  { item: 'Guitar Hero III', detail: 'I can play Through the Fire and Flames on Expert!!' },
+  { item: 'High School Musical 2', detail: 'WHAT TIME IS IT?? SUMMERTIME!!' },
+  { item: 'Superbad', detail: 'McLovin is a legend lmaooo' },
+  { item: 'Soulja Boy Dance', detail: 'Superman dat... u know the rest 😏' },
+  { item: 'Crocs', detail: 'theyre ugly but SO comfy lol' },
+  { item: 'Webkinz', detail: 'I have like 47 of them... dont judge me' },
 ]
 
 const PARTICLE_CONFIGS: Record<string, { particles: string[]; count: number }> = {
@@ -405,8 +488,8 @@ function SkinSelector({ currentSkin, onSkinChange }: { currentSkin: Skin; onSkin
 }
 
 function MusicPlayer({ skin, onTrackChange }: { skin: Skin; onTrackChange: (track: Track) => void }) {
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0)
-  const [isPlaying, setIsPlaying] = useState(false)
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(4)
+  const [isPlaying, setIsPlaying] = useState(true)
   const [showPlaylist, setShowPlaylist] = useState(false)
 
   const currentTrack = TRACKS[currentTrackIndex]
@@ -573,6 +656,194 @@ function MusicPlayer({ skin, onTrackChange }: { skin: Skin; onTrackChange: (trac
   )
 }
 
+// Rotating celebrity images from 2007 - scrolls through iconic moments
+function RotatingCelebImage({ skin }: { skin: Skin }) {
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % CELEB_IMAGES_2007.length)
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const celeb = CELEB_IMAGES_2007[currentIndex]
+
+  return (
+    <div className="mb-2">
+      <div
+        className="mx-auto overflow-hidden rounded pulse-ring hover-jiggle"
+        style={{
+          width: '100px',
+          height: '100px',
+          border: `3px solid ${skin.primaryColor}`,
+          '--glow-color': skin.glowColor,
+        } as CSSProperties}
+      >
+        <img
+          src={celeb.url}
+          alt={celeb.alt}
+          className="w-full h-full object-cover"
+          style={{ imageRendering: 'auto' }}
+          onError={(e) => {
+            const target = e.target as HTMLImageElement
+            target.style.display = 'none'
+          }}
+        />
+      </div>
+      <p
+        className="text-xs mt-1 blink-text font-bold"
+        style={{ color: skin.accentColor, fontFamily: skin.fontFamily }}
+      >
+        {celeb.caption}
+      </p>
+    </div>
+  )
+}
+
+// Rotating 2007 quotes ticker
+function QuoteTicker({ skin }: { skin: Skin }) {
+  const [quoteIndex, setQuoteIndex] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setQuoteIndex((prev) => (prev + 1) % QUOTES_2007.length)
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div
+      className="rounded overflow-hidden hover-glow"
+      style={{
+        background: skin.cardBg,
+        border: skin.cardBorder,
+        '--glow-color': skin.glowColor,
+      } as CSSProperties}
+    >
+      <div className="p-2 text-center" style={{ background: skin.headerGradient }}>
+        <span className="text-xs font-bold uppercase tracking-wider" style={{ color: skin.textColor }}>
+          {'🎵'} Now Quoting {'🎵'}
+        </span>
+      </div>
+      <div className="p-3 text-center">
+        <p
+          className="text-xs italic fade-in-up font-bold"
+          key={quoteIndex}
+          style={{ color: skin.primaryColor, fontFamily: skin.fontFamily }}
+        >
+          &quot;{QUOTES_2007[quoteIndex]}&quot;
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// AIM Away Message widget
+function AwayMessageWidget({ skin }: { skin: Skin }) {
+  const [msgIndex, setMsgIndex] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMsgIndex((prev) => (prev + 1) % AWAY_MESSAGES_2007.length)
+    }, 6000)
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div
+      className="rounded overflow-hidden hover-glow"
+      style={{
+        background: skin.cardBg,
+        border: skin.cardBorder,
+        '--glow-color': skin.glowColor,
+      } as CSSProperties}
+    >
+      <div className="p-2 text-center" style={{ background: skin.headerGradient }}>
+        <span className="text-xs font-bold uppercase tracking-wider" style={{ color: skin.textColor }}>
+          {'💬'} AIM Away Message {'💬'}
+        </span>
+      </div>
+      <div className="p-3 text-center">
+        <div className="flex items-center justify-center gap-1 mb-1">
+          <span className="text-xs" style={{ color: skin.secondaryColor }}>{'🚫'} Away</span>
+        </div>
+        <p
+          className="text-xs italic typing-cursor fade-in-up"
+          key={msgIndex}
+          style={{ color: skin.textColor, fontFamily: '"Comic Sans MS", cursive' }}
+        >
+          {AWAY_MESSAGES_2007[msgIndex]}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// Pop Culture 2007 widget
+function PopCultureWidget({ skin }: { skin: Skin }) {
+  const [itemIndex, setItemIndex] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setItemIndex((prev) => (prev + 1) % POP_CULTURE_2007.length)
+    }, 4500)
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div
+      className="rounded overflow-hidden hover-glow"
+      style={{
+        background: skin.cardBg,
+        border: skin.cardBorder,
+        '--glow-color': skin.glowColor,
+      } as CSSProperties}
+    >
+      <div className="p-2 text-center" style={{ background: skin.headerGradient }}>
+        <span className="text-xs font-bold uppercase tracking-wider" style={{ color: skin.textColor }}>
+          {'📺'} Whats Hot in 2007 {'📺'}
+        </span>
+      </div>
+      <div className="p-3 text-center">
+        <p className="text-sm font-bold shake-element inline-block" style={{ color: skin.accentColor }}>
+          {POP_CULTURE_2007[itemIndex].item}
+        </p>
+        <p
+          className="text-xs mt-1 fade-in-up"
+          key={itemIndex}
+          style={{ color: skin.textColor, fontFamily: skin.fontFamily, opacity: 0.8 }}
+        >
+          {POP_CULTURE_2007[itemIndex].detail}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// Random 2007 slang ticker at the bottom
+function SlangTicker({ skin }: { skin: Skin }) {
+  return (
+    <div className="flex flex-wrap justify-center gap-2 py-2">
+      {SLANG_2007.slice(0, 10).map((slang, i) => (
+        <span
+          key={slang}
+          className="text-xs px-2 py-0.5 rounded-full wobble-element hover-jiggle cursor-pointer"
+          style={{
+            background: `${skin.primaryColor}20`,
+            border: `1px dashed ${skin.primaryColor}`,
+            color: skin.primaryColor,
+            animationDelay: `${i * 0.2}s`,
+            fontFamily: '"Comic Sans MS", cursive',
+          }}
+        >
+          {slang}
+        </span>
+      ))}
+    </div>
+  )
+}
+
 function ProfileCard({ skin, selectedMood, onMoodChange, username, onUsernameChange }: {
   skin: Skin
   selectedMood: string
@@ -594,7 +865,8 @@ function ProfileCard({ skin, selectedMood, onMoodChange, username, onUsernameCha
         } as CSSProperties}
       >
         <div className="p-3 text-center" style={{ background: skin.headerGradient }}>
-          <div className="text-4xl mb-1 bounce-element">{currentMood.emoji}</div>
+          <RotatingCelebImage skin={skin} />
+          <div className="text-2xl mb-1 bounce-element">{currentMood.emoji}</div>
           <input
             type="text"
             value={username}
@@ -1028,14 +1300,61 @@ function RetroWidgets({ skin, currentTrack }: { skin: Skin; currentTrack: string
 // MAIN APP
 // ============================================================
 
+// Cursor trail component - sparkles follow your mouse like 2007
+function CursorTrail({ skin }: { skin: Skin }) {
+  const trailRef = useRef<HTMLDivElement>(null)
+  const trailEmojis = useMemo(() => {
+    const config = PARTICLE_CONFIGS[skin.specialEffect] || PARTICLE_CONFIGS.hearts
+    return config.particles
+  }, [skin.specialEffect])
+
+  useEffect(() => {
+    let emojiIndex = 0
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!trailRef.current) return
+      if (Math.random() > 0.3) return // throttle
+      const sparkle = document.createElement('span')
+      sparkle.className = 'cursor-trail'
+      sparkle.textContent = trailEmojis[emojiIndex % trailEmojis.length]
+      sparkle.style.left = `${e.clientX}px`
+      sparkle.style.top = `${e.clientY}px`
+      trailRef.current.appendChild(sparkle)
+      emojiIndex++
+      setTimeout(() => sparkle.remove(), 800)
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [trailEmojis])
+
+  return <div ref={trailRef} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 99999 }} />
+}
+
+// Skin change flash effect
+function SkinFlash({ color, visible }: { color: string; visible: boolean }) {
+  if (!visible) return null
+  return (
+    <div
+      className="skin-flash"
+      style={{ background: `radial-gradient(circle, ${color}60 0%, transparent 70%)` }}
+    />
+  )
+}
+
 function App() {
   const [currentSkin, setCurrentSkin] = useState<Skin>(SKINS[0])
   const [username, setUsername] = useState('xX_YourName_Xx')
   const [selectedMood, setSelectedMood] = useState('chillin')
-  const [currentTrackTitle, setCurrentTrackTitle] = useState(TRACKS[0].title)
+  const [currentTrackTitle, setCurrentTrackTitle] = useState(TRACKS[4].title)
+  const [showFlash, setShowFlash] = useState(false)
 
   const handleTrackChange = useCallback((track: Track) => {
     setCurrentTrackTitle(track.title)
+  }, [])
+
+  const handleSkinChange = useCallback((skin: Skin) => {
+    setShowFlash(true)
+    setCurrentSkin(skin)
+    setTimeout(() => setShowFlash(false), 600)
   }, [])
 
   return (
@@ -1049,6 +1368,8 @@ function App() {
         '--glow-color': currentSkin.glowColor,
       } as CSSProperties}
     >
+      <CursorTrail skin={currentSkin} />
+      <SkinFlash color={currentSkin.primaryColor} visible={showFlash} />
       <FloatingParticles skin={currentSkin} />
 
       {/* Top Marquee Banner */}
@@ -1074,16 +1395,16 @@ function App() {
       {/* Page Title */}
       <div className="relative z-10 text-center py-6 px-4">
         <h1
-          className="text-3xl md:text-5xl font-bold mb-2 text-glow rainbow-text"
+          className="text-3xl md:text-5xl font-bold mb-2 neon-flicker gentle-float"
           style={{
             fontFamily: currentSkin.fontFamily,
             '--glow-color': currentSkin.glowColor,
             letterSpacing: '2px',
           } as CSSProperties}
         >
-          {'~*~ '}Hi5 Remix{' ~*~'}
+          <span className="rainbow-bg">{'~*~ '}Hi5 Remix{' ~*~'}</span>
         </h1>
-        <p className="text-lg mb-1" style={{ color: currentSkin.primaryColor, fontFamily: currentSkin.fontFamily }}>
+        <p className="text-lg mb-1 typewriter-text" style={{ color: currentSkin.primaryColor, fontFamily: currentSkin.fontFamily }}>
           Community Bulletin Board
         </p>
         <p className="text-sm blink-text" style={{ color: currentSkin.accentColor }}>
@@ -1091,14 +1412,14 @@ function App() {
         </p>
         <div className="flex items-center justify-center gap-2 mt-3">
           {['✨', '💖', '🌟', '💎', '⭐', '💖', '✨'].map((emoji, i) => (
-            <span key={i} className="sparkle-element text-lg" style={{ animationDelay: `${i * 0.2}s` }}>
+            <span key={i} className="sparkle-element text-lg wiggle-hover" style={{ animationDelay: `${i * 0.2}s`, cursor: 'pointer' }}>
               {emoji}
             </span>
           ))}
         </div>
         <div
-          className="retro-divider mt-4 mx-auto max-w-md"
-          style={{ '--glow-color': currentSkin.glowColor } as CSSProperties}
+          className="retro-divider mt-4 mx-auto max-w-md rainbow-border"
+          style={{ '--glow-color': currentSkin.glowColor, borderWidth: '2px', borderStyle: 'solid' } as CSSProperties}
         />
       </div>
 
@@ -1106,7 +1427,7 @@ function App() {
       <div className="relative z-10 max-w-7xl mx-auto px-3 pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           {/* Left Sidebar */}
-          <div className="lg:col-span-3 space-y-4">
+          <div className="lg:col-span-3 space-y-4 slide-in-left">
             <ProfileCard
               skin={currentSkin}
               selectedMood={selectedMood}
@@ -1114,10 +1435,12 @@ function App() {
               username={username}
               onUsernameChange={setUsername}
             />
+            <AwayMessageWidget skin={currentSkin} />
+            <QuoteTicker skin={currentSkin} />
           </div>
 
           {/* Center Content */}
-          <div className="lg:col-span-6 space-y-4">
+          <div className="lg:col-span-6 space-y-4 card-pop-in">
             {/* Announcement Banner */}
             <div
               className="rounded overflow-hidden glow-border"
@@ -1147,6 +1470,9 @@ function App() {
             </div>
 
             <PostWall skin={currentSkin} username={username} />
+
+            {/* 2007 Slang Cloud */}
+            <SlangTicker skin={currentSkin} />
 
             {/* Tags Section */}
             <div
@@ -1178,9 +1504,10 @@ function App() {
           </div>
 
           {/* Right Sidebar */}
-          <div className="lg:col-span-3 space-y-4">
-            <SkinSelector currentSkin={currentSkin} onSkinChange={setCurrentSkin} />
+          <div className="lg:col-span-3 space-y-4 slide-in-right">
+            <SkinSelector currentSkin={currentSkin} onSkinChange={handleSkinChange} />
             <MusicPlayer skin={currentSkin} onTrackChange={handleTrackChange} />
+            <PopCultureWidget skin={currentSkin} />
             <RetroWidgets skin={currentSkin} currentTrack={currentTrackTitle} />
           </div>
         </div>
