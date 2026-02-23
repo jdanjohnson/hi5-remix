@@ -328,14 +328,19 @@ const TOP_8_FRIENDS = [
   { name: 'PIMP_DADDY', avatar: '🎩', status: 'gettin money', img: '' },
 ]
 
-// 2007 Celebrity/Meme images - iconic moments from the era
+// 2007 Cultural images - iconic vibes from the era
 const CELEB_IMAGES_2007 = [
-  { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Soulja_Boy_in_2007.jpg/440px-Soulja_Boy_in_2007.jpg', caption: 'Soulja Boy - YOUUUUU', alt: 'Soulja Boy 2007' },
-  { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Kanye_West_at_the_2007_MTV_Video_Music_Awards.jpg/440px-Kanye_West_at_the_2007_MTV_Video_Music_Awards.jpg', caption: 'Kanye - Stronger era', alt: 'Kanye West 2007' },
-  { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Rihanna_concerts_2007.jpg/440px-Rihanna_concerts_2007.jpg', caption: 'Rihanna - Umbrella era', alt: 'Rihanna 2007' },
-  { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Avril_Lavigne_on_piano%2C_MotorFM_Party%2C_Berlin_%28edit%29.jpg/440px-Avril_Lavigne_on_piano%2C_MotorFM_Party%2C_Berlin_%28edit%29.jpg', caption: 'Avril - Hey Hey You You', alt: 'Avril Lavigne' },
-  { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/T-Pain_2007.jpg/440px-T-Pain_2007.jpg', caption: 'T-Pain - Buy U a Drank', alt: 'T-Pain 2007' },
-  { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Fergie_2007.jpg/440px-Fergie_2007.jpg', caption: 'Fergie - Glamorous', alt: 'Fergie 2007' },
+  { url: '/images/graduation.jpg', caption: 'Kanye - Graduation Era', alt: 'Kanye Graduation album 2007' },
+  { url: '/images/hiphop.jpg', caption: 'Crank Dat!! YOUUUU', alt: 'Hip hop dance 2007' },
+  { url: '/images/graffiti.jpg', caption: 'Ghetto Graffiti Vibes', alt: 'Graffiti street art' },
+  { url: '/images/disco.jpg', caption: 'Party Like Its 2007!!', alt: 'Disco party lights' },
+  { url: '/images/mic.jpg', caption: 'Open Mic Night @ da Club', alt: 'Microphone concert' },
+  { url: '/images/headphones.jpg', caption: 'Bumpin My Playlist rn', alt: 'Headphones music' },
+  { url: '/images/neon.jpg', caption: 'Scene Kid Paradise', alt: 'Neon lights retro' },
+  { url: '/images/bling.jpg', caption: 'Ice Ice Baby 💎💎', alt: 'Gold bling jewelry' },
+  { url: '/images/vinyl.jpg', caption: 'Old Skool Vibes Only', alt: 'Vinyl records' },
+  { url: '/images/retro-pc.jpg', caption: 'Pimp My Profile.com', alt: 'Retro computer setup' },
+  { url: '/images/cool.jpg', caption: 'Stuntin Is A Habit', alt: 'Cool shades 2007' },
 ]
 
 // 2007 cultural quotes and references
@@ -489,8 +494,10 @@ function SkinSelector({ currentSkin, onSkinChange }: { currentSkin: Skin; onSkin
 
 function MusicPlayer({ skin, onTrackChange }: { skin: Skin; onTrackChange: (track: Track) => void }) {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(4)
-  const [isPlaying, setIsPlaying] = useState(true)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [hasInteracted, setHasInteracted] = useState(false)
   const [showPlaylist, setShowPlaylist] = useState(false)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
 
   const currentTrack = TRACKS[currentTrackIndex]
 
@@ -500,6 +507,7 @@ function MusicPlayer({ skin, onTrackChange }: { skin: Skin; onTrackChange: (trac
       onTrackChange(TRACKS[newIdx])
       return newIdx
     })
+    setHasInteracted(true)
   }, [onTrackChange])
 
   const handleNext = useCallback(() => {
@@ -508,16 +516,19 @@ function MusicPlayer({ skin, onTrackChange }: { skin: Skin; onTrackChange: (trac
       onTrackChange(TRACKS[newIdx])
       return newIdx
     })
+    setHasInteracted(true)
   }, [onTrackChange])
 
   const handleTrackSelect = useCallback((index: number) => {
     setCurrentTrackIndex(index)
     setIsPlaying(true)
+    setHasInteracted(true)
     setShowPlaylist(false)
     onTrackChange(TRACKS[index])
   }, [onTrackChange])
 
   const togglePlay = useCallback(() => {
+    setHasInteracted(true)
     setIsPlaying((prev) => !prev)
   }, [])
 
@@ -596,17 +607,36 @@ function MusicPlayer({ skin, onTrackChange }: { skin: Skin; onTrackChange: (trac
         </button>
       </div>
 
-      {/* YouTube Embed (audio only via hidden iframe) */}
-      {isPlaying && (
+      {/* YouTube Embed - visible player so autoplay works with user interaction */}
+      {isPlaying && hasInteracted && (
         <div className="px-3 pb-2">
           <iframe
+            ref={iframeRef}
             width="100%"
-            height="0"
-            src={`https://www.youtube.com/embed/${currentTrack.id}?autoplay=1&loop=0`}
+            height="80"
+            src={`https://www.youtube.com/embed/${currentTrack.id}?autoplay=1&loop=0&rel=0&modestbranding=1`}
             allow="autoplay; encrypted-media"
-            style={{ border: 'none', height: 0, overflow: 'hidden' }}
+            style={{ border: `1px solid ${skin.borderColor}`, borderRadius: '4px' }}
             title={currentTrack.title}
           />
+        </div>
+      )}
+
+      {/* Click to play hint if not yet interacted */}
+      {!hasInteracted && (
+        <div className="px-3 pb-2 text-center">
+          <button
+            onClick={togglePlay}
+            className="retro-button text-xs px-3 py-1.5 blink-text glow-border"
+            style={{
+              background: skin.headerGradient,
+              color: skin.textColor,
+              borderColor: skin.accentColor,
+              '--glow-color': skin.glowColor,
+            } as CSSProperties}
+          >
+            {'>> '}CLICK 2 PLAY MUSIC !!{' <<'}
+          </button>
         </div>
       )}
 
